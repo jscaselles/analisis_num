@@ -1,14 +1,14 @@
-let precision = 6;
+let precision = 4;
 
 function transformMathFunctions(expression) {
     return expression
+        .replace(/\be\b/g, "Math.E")
         .replace(/\bexp\b/g, "Math.exp")
         .replace(/\blog\b/g, "Math.log")
         .replace(/\bsin\b/g, "Math.sin")
         .replace(/\bcos\b/g, "Math.cos")
         .replace(/\btan\b/g, "Math.tan")
-        .replace(/\bsqrt\b/g, "Math.sqrt")
-        .replace(/\be\b/g, "Math.E");
+        .replace(/\bsqrt\b/g, "Math.sqrt");
 }
 
 function createMathFunction(expression) {
@@ -29,9 +29,9 @@ function falsePositionAlgorithm(equation, lowerBound, upperBound, errorMargin) {
 
     let resultsTable = document.querySelector("#tablaResultados tbody");
     let iterationsContainer = document.getElementById("iterations");
-
-    resultsTable.innerHTML = "";
-    iterationsContainer.innerHTML = "";
+    
+    if (resultsTable) resultsTable.innerHTML = "";
+    if (iterationsContainer) iterationsContainer.innerHTML = "";
 
     while (approximationError > errorMargin) {
         iterationCount++;
@@ -51,18 +51,20 @@ function falsePositionAlgorithm(equation, lowerBound, upperBound, errorMargin) {
                     <td>${f_current}</td>
                     <td>${approximationError}</td>
                 </tr>`;
-        resultsTable.innerHTML += row;
+        if (resultsTable) resultsTable.innerHTML += row;
 
-        iterationsContainer.innerHTML += `
-            <div class="iteration">
-                <strong>Iteración ${iterationCount}</strong><br>
-                xi = ${lowerBound}, xs = ${upperBound}<br>
-                xr = ${currentRoot}<br>
-                f(xi) = ${f_lower}, f(xs) = ${f_upper}, f(xr) = ${f_current}<br>
-                Error = ${approximationError} %
-                <hr>
-            </div>
-        `;
+        if (iterationsContainer) {
+            iterationsContainer.innerHTML += `
+                <div class="iteration">
+                    <strong>Iteración ${iterationCount}</strong><br>
+                    xi = ${lowerBound}, xs = ${upperBound}<br>
+                    xr = ${currentRoot}<br>
+                    f(xi) = ${f_lower}, f(xs) = ${f_upper}, f(xr) = ${f_current}<br>
+                    Error = ${approximationError} %
+                    <hr>
+                </div>
+            `;
+        }
 
         if (approximationError <= errorMargin) {
             alert(`Raíz encontrada en xr = ${currentRoot}`);
@@ -95,23 +97,25 @@ function exportToPDF() {
     doc.setFontSize(16);
     doc.text("Método de Falsa Posición", 14, 15);
     
-    // Capturar tabla de resultados
     let table = document.getElementById("tablaResultados");
-    doc.autoTable({ html: table, startY: 25 });
+    if (table) {
+        doc.autoTable({ html: table, startY: 25 });
+    }
 
-    // Capturar detalles de iteraciones
-    let iterationsText = document.getElementById("iterations").innerText;
+    let iterationsText = document.getElementById("iterations")?.innerText || "";
     doc.setFontSize(12);
     doc.text("Detalles de Iteraciones", 14, doc.autoTable.previous.finalY + 10);
     doc.setFontSize(10);
     let lines = doc.splitTextToSize(iterationsText, 180);
     doc.text(lines, 14, doc.autoTable.previous.finalY + 20);
 
-    // Guardar PDF
     doc.save("metodo_falsa_posicion.pdf");
 }
 
-// Asignar evento al botón de exportar
-window.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("btnExportarPDF").addEventListener("click", exportToPDF);
+// Asegurar que el botón existe antes de asignar evento
+document.addEventListener("DOMContentLoaded", function () {
+    let exportButton = document.getElementById("btnExportarPDF");
+    if (exportButton) {
+        exportButton.addEventListener("click", exportToPDF);
+    }
 });
