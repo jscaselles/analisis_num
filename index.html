@@ -8,62 +8,78 @@
     <!-- Librerías de jsPDF y autoTable -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-
+    
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
             background-color: #f0f2f5;
+            margin: 20px;
             text-align: center;
         }
         .container {
             max-width: 600px;
             margin: auto;
-            background: #fff;
+            background: #ffffff;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        h2, h3 {
+            color: #333;
+        }
+        fieldset {
+            border: none;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
         }
         input {
+            width: 100%;
             padding: 8px;
+            margin-bottom: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-        .buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-        }
         button {
-            padding: 10px 15px;
+            background: #007bff;
+            color: #fff;
             border: none;
+            padding: 10px 15px;
             border-radius: 5px;
-            background-color: #007bff;
-            color: white;
             cursor: pointer;
             transition: 0.3s;
         }
         button:hover {
-            background-color: #0056b3;
+            background: #0056b3;
         }
         table {
             width: 100%;
-            margin-top: 20px;
             border-collapse: collapse;
-            background: white;
+            margin-top: 20px;
+            background: #fff;
         }
         th, td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 10px;
+            text-align: center;
         }
         th {
-            background-color: #007bff;
+            background: #007bff;
             color: white;
+        }
+        #iterations {
+            text-align: left;
+            margin-top: 10px;
+            background: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
     </style>
 </head>
@@ -86,10 +102,9 @@
                 <label for="tolerancia">Margen de Error (%):</label>
                 <input type="number" id="tolerancia" step="any" placeholder="Ej: 0.001" required>
 
-                <div class="buttons">
-                    <button type="button" onclick="executeFalsePosition()">Ejecutar Método</button>
-                    <button type="button" onclick="window.location.href='integrantes.html'">Ver Integrantes</button>
-                </div>
+                <button type="button" onclick="executeFalsePosition()">Ejecutar Método</button>
+                <button type="button" onclick="window.location.href='integrantes.html'">Ver Integrantes</button>
+
             </form>
         </fieldset>
 
@@ -109,6 +124,9 @@
             </thead>
             <tbody></tbody>
         </table>
+
+        <h3>Detalles de Iteraciones</h3>
+        <div id="iterations"></div>
 
         <button id="btnExportarPDF">Exportar a PDF</button>
     </div>
